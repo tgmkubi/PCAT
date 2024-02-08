@@ -3,25 +3,27 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
+// TEMPLATE ENGINE
+app.set('view engine', 'ejs'); // ejs template engine default olarak views klasörü içerisine bakar
+
 // MIDDLEWARES
 // Express Static Files Middleware - Absolute path of the directory that you want to serve - independent from my local computer/server
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Absolute path of the directory that you want to serve - independent from my local computer/server
 const baseURL = path.resolve(__dirname);
 
 // ROUTES
 app.get('/', (req, res) => {
-  res.sendFile(path.join(baseURL, 'temp/index.html'));
+  // res.sendFile(path.join(baseURL, 'views/index.ejs'));
+  res.render("index"); // ejs template engine default olarak views klasörü içerisine bakar. bu ayar değiştirilebilir.
 });
 app.get('/video-page', (req, res) => {
-  res.sendFile(path.join(baseURL, 'temp/video-page.html'));
+  res.render("video-page");
 });
 app.get('/about', (req, res) => {
-  res.sendFile(path.join(baseURL, 'temp/about.html'));
+  res.render("about");
 });
-app.get('/contact', (req, res) => {
-  res.sendFile(path.join(baseURL, 'temp/contact.html'));
+app.get('/add', (req, res) => {
+  res.render("add");
 });
 
 app.listen(PORT, () => {
