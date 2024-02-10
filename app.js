@@ -23,26 +23,35 @@ app.use(express.json());
 
 // ROUTES
 app.get('/', async (req, res) => {
-
   const photos = await Photo.find();
-  
+
   res.render('index', {
     photos: photos,
-  }); 
-});
-app.get('/video-page', (req, res) => {
-  // res.sendFile(path.join(baseURL, 'views/video-page.ejs'));
-  res.render('video-page'); // ejs template engine default olarak views klasörü içerisine bakar. bu ayar değiştirilebilir.
-});
-app.get('/about', (req, res) => {
-  res.render('about');
-});
-app.get('/add', (req, res) => {
-  res.render('add');
+  });
 });
 
+app.get('/photos/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let photo = await Photo.findById(id);
+    if (!photo) {
+      // Fotoğraf bulunamadı
+      return res.status(404).send('Fotoğraf bulunamadı');
+    }
+    // Fotoğraf bulundu, şimdi render işlemi yapabiliriz
+    res.render('photo', {
+      photo
+    });
+  } catch (error) {
+    console.log(error);
+    // Hata oluştuğunda da uygun şekilde yanıt verin
+    return res.status(500).send('Sunucu hatası');
+  }
+});
+
+// Create new photo document from Photo Model
 app.post('/photos', async (req, res) => {
-  // Create new photo document from Photo Model
   const { title, description, image } = req.body;
 
   await Photo.create({
@@ -52,6 +61,13 @@ app.post('/photos', async (req, res) => {
   });
 
   res.redirect('/');
+});
+
+app.get('/about', (req, res) => {
+  res.render('about'); // ejs template engine default olarak views klasörü içerisine bakar. bu ayar değiştirilebilir.
+});
+app.get('/add', (req, res) => {
+  res.render('add');
 });
 
 app.listen(PORT, () => {
