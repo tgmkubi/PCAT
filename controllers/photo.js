@@ -75,8 +75,33 @@ const addPhoto = async (req, res) => {
   });
 };
 
+const editPhotoPage = async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  res.render('edit', {
+    photo,
+  });
+};
+
+const editPhoto = async (req, res) => {
+  const { id } = req.params;
+  const { title, description } = req.body;
+
+  const photo = await Photo.findById(id);
+
+  photo.title = title;
+  photo.description = description;
+
+  await photo.save();
+
+  photo.title = res.render('photo', {
+    photo,
+  });
+};
+
 module.exports = {
   getPhotos,
   getSinglePhoto,
   addPhoto,
+  editPhotoPage,
+  editPhoto,
 };

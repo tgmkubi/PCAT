@@ -3,9 +3,16 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fileUpload = require('express-fileupload');
+const methodOverride = require('method-override');
 const connectDatabase = require('./helpers/database/connectDatabase');
 const Photo = require('./models/Photo');
-const { getPhotos, getSinglePhoto, addPhoto } = require('./controllers/photo');
+const {
+  getPhotos,
+  getSinglePhoto,
+  addPhoto,
+  editPhotoPage,
+  editPhoto,
+} = require('./controllers/photo');
 
 const app = express();
 
@@ -23,11 +30,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(fileUpload());
+app.use(methodOverride('_method'));
 
 // ROUTES
 app.get('/', getPhotos);
 app.get('/photos/:id', getSinglePhoto);
 app.post('/photos', addPhoto);
+app.get('/photos/edit/:id', editPhotoPage);
+app.put('/photos/:id', editPhoto);
 
 app.get('/about', (req, res) => {
   res.render('about'); // ejs template engine default olarak views klasörü içerisine bakar. bu ayar değiştirilebilir.

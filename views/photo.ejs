@@ -53,11 +53,17 @@
             <div class="tm-bg-gray tm-share-box d-flex flex-column justify-content-between">
 
               <div class="mb-4">
-                <button
+                <!-- <button
                   class="btn btn-primary p-0 tm-btn-animate tm-btn-download tm-icon-download"
                 >
                   <span>Update Details</span>
-                </button>
+                </button> -->
+                <a
+                  href="/photos/edit/<%= photo._id %>"
+                  class="btn btn-primary p-0 tm-btn-animate tm-btn-download tm-icon-download"
+                >
+                  <span>Update Details</span>
+                </a>
               </div>
               <div>
                 <button
