@@ -5,28 +5,28 @@ const path = require('path');
 const fileUpload = require('express-fileupload');
 const methodOverride = require('method-override');
 const connectDatabase = require('./helpers/database/connectDatabase');
-const Photo = require('./models/Photo');
 const {
-  getPhotos,
+  getAllPhotos,
   getSinglePhoto,
-  addPhoto,
-  editPhotoPage,
+  createPhoto,
   editPhoto,
   deletePhoto,
 } = require('./controllers/photo');
+const {
+  getAboutPage,
+  getAddPhotoPage,
+  getEditPhotoPage,
+} = require('./controllers/page');
 
 const app = express();
 
 // Connect DB
 connectDatabase();
 
-const baseURL = path.resolve(__dirname);
-
 // TEMPLATE ENGINE
 app.set('view engine', 'ejs'); // ejs template engine default olarak views klasörü içerisine bakar
 
 // MIDDLEWARES
-// Express Static Files Middleware - Absolute path of the directory that you want to serve - independent from my local computer/server
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -34,19 +34,15 @@ app.use(fileUpload());
 app.use(methodOverride('_method', { methods: ['GET', 'POST'] }));
 
 // ROUTES
-app.get('/', getPhotos);
+app.get('/', getAllPhotos);
 app.get('/photos/:id', getSinglePhoto);
-app.post('/photos', addPhoto);
-app.get('/photos/edit/:id', editPhotoPage);
+app.post('/photos', createPhoto);
 app.put('/photos/:id', editPhoto);
 app.delete('/photos/:id', deletePhoto);
 
-app.get('/about', (req, res) => {
-  res.render('about'); // ejs template engine default olarak views klasörü içerisine bakar. bu ayar değiştirilebilir.
-});
-app.get('/add', (req, res) => {
-  res.render('add');
-});
+app.get('/about', getAboutPage);
+app.get('/add', getAddPhotoPage);
+app.get('/photos/edit/:id', getEditPhotoPage);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port http://localhost:${PORT}`);

@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const Photo = require('../models/Photo');
 
-const getPhotos = async (req, res) => {
+const getAllPhotos = async (req, res) => {
   const photos = await Photo.find().sort('-date');
 
   res.render('index', {
@@ -16,22 +16,19 @@ const getSinglePhoto = async (req, res) => {
   try {
     let photo = await Photo.findById(id);
     if (!photo) {
-      // Fotoğraf bulunamadı
       return res.status(404).send('Fotoğraf bulunamadı');
     }
-    // Fotoğraf bulundu, şimdi render işlemi yapabiliriz
 
     res.render('photo', {
       photo,
     });
   } catch (error) {
     console.log(error);
-    // Hata oluştuğunda da uygun şekilde yanıt verin
     return res.status(500).send('Sunucu hatası');
   }
 };
 
-const addPhoto = async (req, res) => {
+const createPhoto = async (req, res) => {
   const uploadDir = path.posix.join(__dirname, '..', 'public', 'uploads');
   if (!fs.existsSync(uploadDir)) {
     try {
@@ -75,13 +72,6 @@ const addPhoto = async (req, res) => {
   });
 };
 
-const editPhotoPage = async (req, res) => {
-  const photo = await Photo.findOne({ _id: req.params.id });
-  res.render('edit', {
-    photo,
-  });
-};
-
 const editPhoto = async (req, res) => {
   const { id } = req.params;
   const { title, description } = req.body;
@@ -93,6 +83,7 @@ const editPhoto = async (req, res) => {
 
   await photo.save();
 
+  //res.redirect(`/photos/${req.params.id}`);
   photo.title = res.render('photo', {
     photo,
   });
@@ -107,10 +98,9 @@ const deletePhoto = async (req, res) => {
 };
 
 module.exports = {
-  getPhotos,
+  getAllPhotos,
   getSinglePhoto,
-  addPhoto,
-  editPhotoPage,
+  createPhoto,
   editPhoto,
   deletePhoto,
 };
