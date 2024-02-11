@@ -12,6 +12,7 @@ const {
   addPhoto,
   editPhotoPage,
   editPhoto,
+  deletePhoto,
 } = require('./controllers/photo');
 
 const app = express();
@@ -30,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(fileUpload());
-app.use(methodOverride('_method'));
+app.use(methodOverride('_method', { methods: ['GET', 'POST'] }));
 
 // ROUTES
 app.get('/', getPhotos);
@@ -38,6 +39,7 @@ app.get('/photos/:id', getSinglePhoto);
 app.post('/photos', addPhoto);
 app.get('/photos/edit/:id', editPhotoPage);
 app.put('/photos/:id', editPhoto);
+app.delete('/photos/:id', deletePhoto);
 
 app.get('/about', (req, res) => {
   res.render('about'); // ejs template engine default olarak views klasörü içerisine bakar. bu ayar değiştirilebilir.

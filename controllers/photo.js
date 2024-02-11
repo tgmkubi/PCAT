@@ -98,10 +98,19 @@ const editPhoto = async (req, res) => {
   });
 };
 
+const deletePhoto = async (req, res) => {
+  const photo = await Photo.findById(req.params.id);
+  const photoPath = path.posix.join(__dirname, '..', 'public', photo.image);
+  fs.unlinkSync(photoPath);
+  await Photo.findByIdAndDelete(photo._id);
+  res.redirect('/');
+};
+
 module.exports = {
   getPhotos,
   getSinglePhoto,
   addPhoto,
   editPhotoPage,
   editPhoto,
+  deletePhoto,
 };
