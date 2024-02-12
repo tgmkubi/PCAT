@@ -9,10 +9,10 @@
         <div class="tm-welcome-container text-center text-white">
           <div class="tm-welcome-container-inner">
             <p class="tm-welcome-text mb-1 text-white">
-              Photo Catalog is brought to you by TemplateMo.
+              Photo Catalog is brought to you by Kubilay Uysal.
             </p>
             <p class="tm-welcome-text mb-5 text-white">
-              This is a full-width photo banner.
+              Explore the nature
             </p>
             <a
               href="#content"
@@ -25,8 +25,8 @@
 
         <div id="tm-video-container">
           <video autoplay muted loop id="tm-video">
-            <!-- <source src="video/sunset-timelapse-video.mp4" type="video/mp4"> -->
-            <source src="video/wheat-field.mp4" type="video/mp4" />
+            <!-- <source src="video/night-drive.mp4" type="video/mp4" /> -->
+            <source src="video/mountain-drive.mp4" type="video/mp4" />
           </video>
         </div>
 
@@ -78,6 +78,7 @@
                     src=<%= photos[i].image %>
                     alt="Image"
                     class="img-fluid tm-catalog-item-img"
+                    style="min-height: 300px;"
                   />
                   <a
                     href="/photos/<%= photos[i]._id %>"
@@ -88,10 +89,10 @@
                 </div>
                 <div class="p-4 tm-bg-gray tm-catalog-item-description">
                   <h3 class="tm-text-primary mb-3 tm-catalog-item-title">
-                    <%= photos[i].title %>
+                    <%= photos[i].title.slice(0, 50) %>
                   </h3>
                   <p class="tm-catalog-item-text">
-                    <%= photos[i].description %>
+                    <%= photos[i].description.slice(0, 100) %>...<a href="/photos/<%= photos[i]._id%>" style="color: blue;">continue to read</a>
                   </p>
                 </div>
               </div>
@@ -100,23 +101,18 @@
             </div>
 
             <!-- Catalog Paging Buttons -->
-            <div>
+            <div style="display: flex; justify-content: center;">
               <ul class="nav tm-paging-links">
-                <li class="nav-item active">
-                  <a href="#" class="nav-link tm-paging-link">1</a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link tm-paging-link">2</a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link tm-paging-link">3</a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link tm-paging-link">4</a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link tm-paging-link">></a>
-                </li>
+                <% const previousPageLink = page == 1 ? null : `<li class="nav-item"><a href="?page=${parseInt(page) - 1}" class="nav-link tm-paging-link"><</a></li>`%>
+                <%- previousPageLink %>
+                <% for(let i = 1; i <= totalPage; i++) { %>
+                  <% const isActive = i == page ? "active" : null;%>
+                  <li class="nav-item <%= isActive %>">
+                    <a href="?page=<%= i %>" class="nav-link tm-paging-link"><%= i %></a>
+                  </li>
+                <% } %>
+                <% const nextPageLink = page == totalPage ? null : `<li class="nav-item"><a href="?page=${parseInt(page) + 1}" class="nav-link tm-paging-link">></a></li>`%>
+                <%- nextPageLink %>
               </ul>
             </div>
           </main>

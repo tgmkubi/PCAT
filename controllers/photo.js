@@ -3,10 +3,18 @@ const fs = require('fs');
 const Photo = require('../models/Photo');
 
 const getAllPhotos = async (req, res) => {
-  const photos = await Photo.find().sort('-date');
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 3;
+  const totalPhotoDocument = await Photo.countDocuments();
+
+  const totalPage = Math.ceil(totalPhotoDocument / limit);
+
+  const photos = await Photo.find().sort('-date').skip((page - 1) * limit).limit(limit);
 
   res.render('index', {
-    photos: photos,
+    photos,
+    page,
+    totalPage,
   });
 };
 
